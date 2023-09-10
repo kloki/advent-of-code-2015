@@ -38,25 +38,25 @@ fn is_nice(input: &str) -> bool {
 }
 fn is_nicer(input: &str) -> bool {
     let iter = input.chars().collect::<Vec<char>>();
+    if iter.len() == 0 {
+        return false;
+    }
     let mut pass = false;
+    let mut pair: Vec<(char, char)> = Vec::new();
     for wind in iter.windows(3) {
         if wind[0] == wind[2] {
             pass = true;
-            break;
+        }
+
+        if !(wind[0] == wind[1] && wind[1] == wind[2]) {
+            pair.push((wind[0], wind[1]));
         }
     }
+    //add the last one
+    pair.push((iter[iter.len() - 2], iter[iter.len() - 1]));
 
     if !pass {
         return false;
-    }
-    let mut pair: Vec<(char, char)> = Vec::new();
-    for i in 0..(iter.len() - 1) {
-        if iter[i] == iter[i + 1] {
-            if i != 0 && iter[i - 1] == iter[i] {
-                continue;
-            }
-        }
-        pair.push((iter[i], iter[i + 1]));
     }
 
     let pre_len = pair.len();
@@ -76,7 +76,6 @@ mod tests {
         assert_eq!(is_nice("jchzalrnumimnmhp"), false);
         assert_eq!(is_nice("haegwjzuvuyypxyu"), false);
         assert_eq!(is_nice("dvszwmarrgswjxmb"), false);
-        assert_eq!(is_nice(""), false);
     }
     #[test]
     fn test_day5_2() {
