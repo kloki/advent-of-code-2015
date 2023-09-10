@@ -55,9 +55,6 @@ fn is_nicer(input: &str) -> bool {
             if i != 0 && iter[i - 1] == iter[i] {
                 continue;
             }
-            if i + 2 > iter.len() && iter[i + 1] == iter[i + 2] {
-                continue;
-            }
         }
         pair.push((iter[i], iter[i + 1]));
     }
@@ -79,13 +76,16 @@ mod tests {
         assert_eq!(is_nice("jchzalrnumimnmhp"), false);
         assert_eq!(is_nice("haegwjzuvuyypxyu"), false);
         assert_eq!(is_nice("dvszwmarrgswjxmb"), false);
+        assert_eq!(is_nice(""), false);
     }
     #[test]
     fn test_day5_2() {
         assert_eq!(is_nicer("qjhvhtzxzqqjkmpb"), true);
         assert_eq!(is_nicer("xxyxx"), true);
         assert_eq!(is_nicer("uurcxstgmygtbstg"), false);
+        assert_eq!(is_nicer("aaaxaa"), true);
         assert_eq!(is_nicer("haegwjzuvuyypxyu"), false);
         assert_eq!(is_nicer("ieodomkazucvgmuy"), false);
+        assert_eq!(is_nicer(""), false);
     }
 }
