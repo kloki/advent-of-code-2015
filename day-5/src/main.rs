@@ -41,6 +41,12 @@ fn is_nicer(input: &str) -> bool {
     if iter.len() == 0 {
         return false;
     }
+    // 4+ of same characters in a row is always nice
+    for wind in iter.windows(4) {
+        if wind[0] == wind[1] && wind[1] == wind[2] && wind[2] == wind[3] {
+            return true;
+        }
+    }
     let mut pass = false;
     let mut pair: Vec<(char, char)> = Vec::new();
     for wind in iter.windows(3) {
@@ -81,10 +87,9 @@ mod tests {
     fn test_day5_2() {
         assert_eq!(is_nicer("qjhvhtzxzqqjkmpb"), true);
         assert_eq!(is_nicer("xxyxx"), true);
+        assert_eq!(is_nicer("aaaa"), true);
         assert_eq!(is_nicer("uurcxstgmygtbstg"), false);
-        assert_eq!(is_nicer("aaaxaa"), true);
-        assert_eq!(is_nicer("haegwjzuvuyypxyu"), false);
-        assert_eq!(is_nicer("ieodomkazucvgmuy"), false);
+        assert_eq!(is_nicer("ieodomkazucwvgmuy"), false);
         assert_eq!(is_nicer(""), false);
     }
 }
