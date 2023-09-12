@@ -1,11 +1,16 @@
 use std::{
-    collections::HashSet,
+    collections::{
+        HashMap,
+        HashSet,
+    },
     fs,
 };
 fn main() {
     let input_file = "./input/input.txt".to_owned();
     let contents = fs::read_to_string(input_file).expect("Can't read file");
     let answer = run_1(contents.clone());
+    println!("{}", answer);
+    let answer = run_2(contents.clone());
     println!("{}", answer);
 }
 
@@ -68,20 +73,62 @@ fn run_1(contents: String) -> usize {
 
     lights.len()
 }
+fn run_2(contents: String) -> usize {
+    let actions = contents
+        .split("\n")
+        .filter(|x| *x != "")
+        .map(|x| parse_action(x));
+    let mut lights: HashMap<(usize, usize), usize> = HashMap::new();
+
+    for (action, x1, y1, x2, y2) in actions {
+        for y in y1..=y2 {
+            for x in x1..=x2 {
+                let current = lights.get(&(x, y)).unwrap_or(&0);
+                match action {
+                    Operation::On => {
+                        lights.insert((x, y), current + 1);
+                    }
+                    Operation::Off => {
+                        if *current != 0 {
+                            lights.insert((x, y), current - 1);
+                        };
+                    }
+                    Operation::Toggle => {
+                        lights.insert((x, y), current + 2);
+                    }
+                };
+            }
+        }
+    }
+
+    lights.into_values().sum()
+}
 #[cfg(test)]
 mod tests {
 
     use super::*;
     #[test]
-    fn test_day1_1_on() {
+    fn test_day6_1_on() {
         assert_eq!(run_1("turn on 0,0 through 2,2".to_string()), 9);
     }
     #[test]
-    fn test_day1_1_off() {
+    fn test_day6_1_off() {
         assert_eq!(run_1("turn off 0,0 through 2,2".to_string()), 0);
     }
     #[test]
-    fn test_day1_1_toggle() {
+    fn test_day6_1_toggle() {
         assert_eq!(run_1("toggle 0,0 through 2,2".to_string()), 9);
+    }
+    #[test]
+    fn test_day6_2_on() {
+        assert_eq!(run_2("turn on 0,0 through 2,2".to_string()), 9);
+    }
+    #[test]
+    fn test_day6_2_off() {
+        assert_eq!(run_2("turn off 0,0 through 2,2".to_string()), 0);
+    }
+    #[test]
+    fn test_day6_2_toggle() {
+        assert_eq!(run_2("toggle 0,0 through 2,2".to_string()), 18);
     }
 }
